@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import ActivityLoader from './ActivityLoader/ActivityLoader';
+import LoginForm from './LoginForm';
 
 var styles = StyleSheet.create({
 	container: {
@@ -15,32 +16,8 @@ var styles = StyleSheet.create({
 		justifyContent: 'center',
 		marginLeft: 30,
 		marginRight: 30
-	},
-	usernameInputContainer: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginBottom: 10
-	},
-	usernameLabel: {
-		flex: 1
-	},
-	usernameInput: {
-		flex: 3
-	},
-	loginButton: {
-		height: 40,
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: '#43A7DE',
-		borderRadius: 4
 	}
-})
-
-var texts = {
-	loginNameInputLabel: "Username: ",
-	loginNameInputPlaceHolder: "Please provide a username",
-	loginButtonText: "Login!"
-};
+});
 
 class LoginPage extends Component {
 	constructor(props) {
@@ -64,18 +41,7 @@ class LoginPage extends Component {
 			);
 		}else{
 			return (
-				<View>
-					<View style={styles.usernameInputContainer}>
-						<Text style={styles.usernameLabel}>{texts.loginNameInputLabel}</Text>
-						<TextInput  style={styles.usernameInput} placeholder={texts.loginNameInputPlaceHolder} />
-					</View>
-					<TouchableHighlight 
-						style={styles.loginButton}
-						onPress={this.attemptLogin.bind(this)}
-						underlayColor="#21536F">
-						<Text>{texts.loginButtonText}</Text>
-					</TouchableHighlight>
-				</View>
+				<LoginForm onSendForm={this.attemptLogin.bind(this)} />
 			);
 		}
 	}
