@@ -1,17 +1,33 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- */
-
 import React, { Component } from 'react';
 import {
-  Text
+  Navigator,
+  StyleSheet
 } from 'react-native';
+
+import LoginPage from './LoginPage';
+
+var styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white'
+  }
+});
 
 class EntryPoint extends Component {
   render() {
     return (
-      <Text>Hello World</Text>
+      <Navigator
+        style={styles.container}
+        initialRoute={{
+          name: 'login',
+          component: LoginPage
+        }}
+        renderScene={
+          (route, navigator) => {
+            return React.createElement(route.component, {...route.passProps, route, navigator } );
+          }
+        }
+      />
     );
   }
 }
