@@ -9,7 +9,7 @@ import LoginPage from './LoginPage';
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: '#69CAFF'
   }
 });
 
