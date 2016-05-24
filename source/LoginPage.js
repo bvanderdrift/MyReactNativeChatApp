@@ -7,6 +7,8 @@ import {
 	StyleSheet
 } from 'react-native';
 
+import ActivityLoader from './ActivityLoader/ActivityLoader';
+
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -44,21 +46,42 @@ class LoginPage extends Component {
 	constructor(props) {
 	  super(props);
 	
-	  this.state = {};
+	  this.state = {
+	  	loggingIn: false
+	  };
 	}
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={styles.usernameInputContainer}>
-		    		<Text style={styles.usernameLabel}>{texts.loginNameInputLabel}</Text>
-		    		<TextInput  style={styles.usernameInput} placeholder={texts.loginNameInputPlaceHolder} />
-				</View>
-				<TouchableHighlight style={styles.loginButton}>
-					<Text>{texts.loginButtonText}</Text>
-				</TouchableHighlight>
+				{this.getFormOrActivityLoader()}
 			</View>
 		);
-  }
+	}	
+	getFormOrActivityLoader(){
+		if(this.state.loggingIn){
+			return (
+				<ActivityLoader />
+			);
+		}else{
+			return (
+				<View>
+					<View style={styles.usernameInputContainer}>
+						<Text style={styles.usernameLabel}>{texts.loginNameInputLabel}</Text>
+						<TextInput  style={styles.usernameInput} placeholder={texts.loginNameInputPlaceHolder} />
+					</View>
+					<TouchableHighlight 
+						style={styles.loginButton}
+						onPress={this.attemptLogin.bind(this)}
+						underlayColor="#21536F">
+						<Text>{texts.loginButtonText}</Text>
+					</TouchableHighlight>
+				</View>
+			);
+		}
+	}
+	attemptLogin(){
+		this.setState({loggingIn: true});
+	}
 }
 
 module.exports = LoginPage;
