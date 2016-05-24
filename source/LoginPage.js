@@ -45,7 +45,7 @@ class LoginPage extends Component {
 			);
 		}
 	}
-	attemptLogin(){
+	attemptLogin(username){
 		this.setState({loggingIn: true});
 	}
 }

@@ -35,21 +35,38 @@ var texts = {
 };
 
 class LoginForm extends Component {
+	constructor(props) {
+	  super(props);
+	
+	  this.state = {
+	  	username: ""
+	  };
+	}
 	render() {
 		return (
 			<View>
 				<View style={styles.usernameInputContainer}>
 					<Text style={styles.usernameLabel}>{texts.loginNameInputLabel}</Text>
-					<TextInput  style={styles.usernameInput} placeholder={texts.loginNameInputPlaceHolder} />
+					<TextInput 
+						style={styles.usernameInput} 
+						value={this.state.username}
+						placeholder={texts.loginNameInputPlaceHolder}
+						onChange={this.onInputTextChanged.bind(this)} />
 				</View>
 				<TouchableHighlight 
 					style={styles.loginButton}
-					onPress={this.props.onSendForm}
+					onPress={this.fireSendForm.bind(this)}
 					underlayColor="#21536F">
 					<Text>{texts.loginButtonText}</Text>
 				</TouchableHighlight>
 			</View>
 		);
+	}
+	onInputTextChanged(event){
+		this.setState({username: event.nativeEvent.text});
+	}
+	fireSendForm(){
+		this.props.onSendForm(this.state.username);
 	}
 }
 
