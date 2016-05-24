@@ -9,6 +9,7 @@ import {
 
 import ActivityLoader from './ActivityLoader/ActivityLoader';
 import LoginForm from './LoginForm';
+import ChatScreen from './ChatScreen';
 
 var styles = StyleSheet.create({
 	container: {
@@ -47,6 +48,12 @@ class LoginPage extends Component {
 	}
 	attemptLogin(username){
 		this.setState({loggingIn: true});
+
+		this.props.navigator.push({
+			name: "chatScreen",
+			component: ChatScreen,
+			username: username
+		});
 	}
 }
 
