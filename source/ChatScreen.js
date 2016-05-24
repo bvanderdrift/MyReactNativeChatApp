@@ -73,36 +73,76 @@ class ChatScreen extends Component {
 		var messagesDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.id !== r2.id});
 
 		this.state = {
+			username: props.route.username,
 			messageText: "",
-			messages: messagesDataSource.cloneWithRows(stubbedMessages)
+			messagesSource: messagesDataSource.cloneWithRows(stubbedMessages)
 		};
 	}
 	render() {
 		return (
 			<View style={styles.container}>
 				<View style={styles.header}>
-					<Text style={styles.headerText}>Welcome {this.props.route.username}!</Text>
+					<Text style={styles.headerText}>Welcome {this.state.username}!</Text>
 				</View>
 
 				<View style={styles.seperator} />
 				
 			    <ListView
 			    	style={styles.messages}
-					dataSource={this.state.messages}
+					dataSource={this.state.messagesSource}
 					renderRow={(messageObj) => <Text>{messageObj.sender}: {messageObj.message}</Text>}
 			    />
 
 				<View style={styles.seperator} />
 
 				<View style={styles.footer}>
-					<TextInput placeholder="Input Message" style={styles.messageInput} />
-					<TouchableHighlight style={styles.sendMessageButton}>
+					<TextInput 
+						placeholder="Input Message"
+						value={this.state.messageText}
+						style={styles.messageInput}
+						onChange={this.handleMessageTextChanged.bind(this)}/>
+					<TouchableHighlight 
+						style={styles.sendMessageButton}
+						onPress={this.handleSendPressed.bind(this)}>
 						<Text>Send!</Text>
 					</TouchableHighlight>
 				</View>
 			</View>
 		);
 	}
+	handleMessageTextChanged(event){
+		this.setState({messageText: event.nativeEvent.text});
+	}
+	handleSendPressed(){
+		this.sendMessage(this.state.username, this.state.messageText);
+		this.setState({messageText: ""});
+	}
+	sendMessage(sender, message) {
+		var messageObj = makeMessage(sender, message);
+		stubbedMessages.push(messageObj);
+		this.setState({
+			messagesSource: this.state.messagesSource.cloneWithRows(stubbedMessages)
+		});
+	}
+}
+
+
+var	makeMessage = function(sender, message){
+	return {
+		id: getUniqueMessageId(),
+		sender: sender,
+		message: message
+	};
+}
+
+var getUniqueMessageId = function(){
+	var id = 0;
+
+	while(stubbedMessages.filter(mo => (mo.id == id)).length > 0){
+		id++;
+	};
+
+	return id;
 }
 
 module.exports = ChatScreen;
