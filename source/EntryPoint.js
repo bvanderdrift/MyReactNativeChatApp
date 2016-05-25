@@ -14,6 +14,9 @@ var styles = StyleSheet.create({
 });
 
 class EntryPoint extends Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <Navigator

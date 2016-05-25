@@ -8,6 +8,8 @@ import {
 	StyleSheet
 } from 'react-native';
 
+import { ServerConnector } from './ServerConnector';
+
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -43,40 +45,20 @@ var styles = StyleSheet.create({
 	}
 });
 
-var stubbedMessages = [
-	{
-		sender: "Beer",
-		message: "Hello World",
-		id: 0
-	},
-	{
-		sender: "Wine",
-		message: "Who is world?",
-		id: 1
-	},
-	{
-		sender: "Beer",
-		message: "Hello Wine",
-		id: 2
-	},
-	{
-		sender: "Wine",
-		message: "That's Me!",
-		id: 3
-	}
+var messages = [
 ];
 
 class ChatScreen extends Component {
 	constructor(props) {
 		super(props);
 
-		var messagesDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.id !== r2.id});
-
 		this.state = {
 			username: props.route.username,
 			messageText: "",
-			messagesSource: messagesDataSource.cloneWithRows(stubbedMessages)
+			messagesSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1.id !== r2.id})
 		};
+
+		ServerConnector.addMessageListener(this.handleReceiveMessage.bind(this));
 	}
 	render() {
 		return (
@@ -117,12 +99,17 @@ class ChatScreen extends Component {
 		this.sendMessage(this.state.username, this.state.messageText);
 		this.setState({messageText: ""});
 	}
+	handleReceiveMessage(msg){
+		var messageObj = makeMessage("Anonymous", msg);
+		messages.push(messageObj);
+		this.setState({
+			messagesSource: this.state.messagesSource.cloneWithRows(messages)
+		});
+	}
 	sendMessage(sender, message) {
 		var messageObj = makeMessage(sender, message);
-		stubbedMessages.push(messageObj);
-		this.setState({
-			messagesSource: this.state.messagesSource.cloneWithRows(stubbedMessages)
-		});
+
+		ServerConnector.sendMessage(messageObj);
 	}
 }
 
@@ -138,7 +125,7 @@ var	makeMessage = function(sender, message){
 var getUniqueMessageId = function(){
 	var id = 0;
 
-	while(stubbedMessages.filter(mo => (mo.id == id)).length > 0){
+	while(messages.filter(mo => (mo.id == id)).length > 0){
 		id++;
 	};
 

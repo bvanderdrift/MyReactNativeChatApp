@@ -10,6 +10,7 @@ import {
 import ActivityLoader from './ActivityLoader/ActivityLoader';
 import LoginForm from './LoginForm';
 import ChatScreen from './ChatScreen';
+import { ServerConnector } from './ServerConnector';
 
 var styles = StyleSheet.create({
 	container: {
@@ -48,6 +49,8 @@ class LoginPage extends Component {
 	}
 	attemptLogin(username){
 		this.setState({loggingIn: true});
+
+      	ServerConnector.init();
 
 		this.props.navigator.push({
 			name: "chatScreen",
