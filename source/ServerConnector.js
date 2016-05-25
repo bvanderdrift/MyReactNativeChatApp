@@ -7,25 +7,34 @@ export var ServerConnector = {
 	init: function() {
 		this.socket = io.connect('http://localhost:3000', {jsonp: false});
 
-		this.socket.on("chat message", function(msg){
-			console.log("Received Message! (" + msg + ")");
-			fireMessageListeners(msg);			
+		this.socket.on("chat message", function(msgObj){
+			fireMessageListeners(msgObj);			
 		});
 	},
-	sendMessage: function(messageObject) {
-		this.socket.emit("chat message", messageObject.message);
+	sendMessage: function(msg) {
+		this.socket.emit("chat message", msg);
 	},
 	addMessageListener: function(listener) {
 		this.messageListeners.push(listener);
 	},
+	attemptLogin: function(username, callback){
+		this.socket.on("login_succes", function(){
+			callback(true, "");
+		});
+		this.socket.on("login_failed", function(error){
+			callback(false, error);
+		});
 
+		console.log("Attempting Login");
+		this.socket.emit("login", username);
+	}
 }
 
-var fireMessageListeners = function(msg){
+var fireMessageListeners = function(msgObj){
 	console.log("Firing message listeners!");
 	console.log(ServerConnector.messageListeners);
 
 	for (var i = ServerConnector.messageListeners.length - 1; i >= 0; i--) {
-		ServerConnector.messageListeners[i](msg);
+		ServerConnector.messageListeners[i](msgObj);
 	}
 }

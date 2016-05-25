@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 
 import LoginPage from './LoginPage';
+import { ServerConnector } from './ServerConnector';
 
 var styles = StyleSheet.create({
   container: {
@@ -16,6 +17,8 @@ var styles = StyleSheet.create({
 class EntryPoint extends Component {
   constructor(props) {
     super(props);
+
+    ServerConnector.init();
   }
   render() {
     return (

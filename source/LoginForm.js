@@ -59,6 +59,7 @@ class LoginForm extends Component {
 					underlayColor="#21536F">
 					<Text>{texts.loginButtonText}</Text>
 				</TouchableHighlight>
+				<Text>{this.props.feedbackMessage}</Text>
 			</View>
 		);
 	}

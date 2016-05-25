@@ -26,7 +26,8 @@ class LoginPage extends Component {
 	  super(props);
 	
 	  this.state = {
-	  	loggingIn: false
+	  	loggingIn: false,
+	  	feedbackMessage: ""
 	  };
 	}
 	render() {
@@ -43,20 +44,30 @@ class LoginPage extends Component {
 			);
 		}else{
 			return (
-				<LoginForm onSendForm={this.attemptLogin.bind(this)} />
+				<LoginForm 
+					onSendForm={this.attemptLogin.bind(this)} 
+					feedbackMessage={this.state.feedbackMessage}/>
 			);
 		}
 	}
 	attemptLogin(username){
 		this.setState({loggingIn: true});
 
-      	ServerConnector.init();
+		var loginCallback = function(succes, error){
+			if(succes) {
+				this.props.navigator.push({
+					name: "chatScreen",
+					component: ChatScreen,
+					username: username
+				});
+			}else{
+				this.setState({
+					feedbackMessage: error
+				});
+			}
+		}
 
-		this.props.navigator.push({
-			name: "chatScreen",
-			component: ChatScreen,
-			username: username
-		});
+		ServerConnector.attemptLogin(username, loginCallback.bind(this));
 	}
 }
 

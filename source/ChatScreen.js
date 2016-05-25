@@ -96,40 +96,15 @@ class ChatScreen extends Component {
 		this.setState({messageText: event.nativeEvent.text});
 	}
 	handleSendPressed(){
-		this.sendMessage(this.state.username, this.state.messageText);
+		ServerConnector.sendMessage(this.state.messageText);
 		this.setState({messageText: ""});
 	}
-	handleReceiveMessage(msg){
-		var messageObj = makeMessage("Anonymous", msg);
-		messages.push(messageObj);
+	handleReceiveMessage(msgObj){
+		messages.push(msgObj);
 		this.setState({
 			messagesSource: this.state.messagesSource.cloneWithRows(messages)
 		});
 	}
-	sendMessage(sender, message) {
-		var messageObj = makeMessage(sender, message);
-
-		ServerConnector.sendMessage(messageObj);
-	}
-}
-
-
-var	makeMessage = function(sender, message){
-	return {
-		id: getUniqueMessageId(),
-		sender: sender,
-		message: message
-	};
-}
-
-var getUniqueMessageId = function(){
-	var id = 0;
-
-	while(messages.filter(mo => (mo.id == id)).length > 0){
-		id++;
-	};
-
-	return id;
 }
 
 module.exports = ChatScreen;
